@@ -3,7 +3,9 @@
 #
 # Description:
 #   
-#   Aternity Tech Community Cookbook (https://github.com/Aternity/Tech-Community)
+#   Aternity Tech Community (https://github.com/Aternity/Tech-Community)
+#   Cookbook 234
+#
 #   Kubernetes manifest to deploy the Spring PetClinic app (see https://github.com/spring-projects/spring-petclinic.git)
 #   containerized with Aternity APM Java agent for Linux, and also a PostgreSQL database
 #
@@ -40,19 +42,16 @@ data:
   RVBD_CUSTOMER_ID: "{RVBD_CUSTOMER_ID}'"
   RVBD_ANALYSIS_SERVER: "{RVBD_ANALYSIS_SERVER}"
 ---
-##########################################################################################################
-# Aternity APM, *optional* apm instrumentation extra configuration
-# Uncomment and in data section paste the content of your configuration file (.json) on the second line
-#
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   namespace: cookbook-233
-#   name: aternity-apm-userdata-config
-# data:
-#   configuration.json: |
-#    "configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}
-##########################################################################################################
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: cookbook-233
+  name: aternity-apm-userdata-config
+data:
+  ##########################################################################################################
+  # Aternity APM, paste the content of the apm instrumentation configuration file (.json)
+  configuration.json: |
+   "configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88,7 +87,7 @@ spec:
         - containerPort: 8080
         env:
         ##########################################################################################################
-        # Aternity APM, define app specific environment variable for APM
+        # Aternity APM, set app specific environment variable for APM
         #
         # Example:
         #   Name the instance
@@ -98,7 +97,7 @@ spec:
           value: "spring-petclinic"
         ##########################################################################################################
         ##########################################################################################################
-        # Aternity APM, modify app environment variable
+        # Aternity APM, set app environment variable used by APM
         #
         #   Add "-agentpath:/aternity-apm/agent/lib/libAwProfile64.so" to JAVA_TOOL_OPTIONS to instrument the app
         #   - name: JAVA_TOOL_OPTIONS
@@ -125,19 +124,19 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 3
+        volumeMounts:
         ##########################################################################################################
-        # Aternity APM, *optional* mount the APM extra configuration file (.json)
-        # volumeMounts:
-        # - name: aternity-apm-userdata-config
-        #  mountPath: /aternity-apm/agent/userdata/config
-        #  readOnly: true
+        # Aternity APM, mount the APM extra configuration file (.json)
+        - name: aternity-apm-userdata-config
+          mountPath: /aternity-apm/agent/userdata/config
+          readOnly: true
         ##########################################################################################################
+      volumes:
       ##########################################################################################################
-      # Aternity APM, *optional* add a volume containing the APM extra configuration
-      # volumes:
-      # - name: aternity-apm-userdata-config
-      #   configMap:
-      #    name: aternity-apm-userdata-config
+      # Aternity APM, add a volume containing the APM extra configuration
+      - name: aternity-apm-userdata-config
+        configMap:
+         name: aternity-apm-userdata-config
       ###########################################################################################################
 ---
 kind: Service
