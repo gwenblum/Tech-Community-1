@@ -1,4 +1,4 @@
-# 233-containerized-apm-with-java-app-on-gke
+# 234-containerized-apm-with-java-app-on-gke
 
 In this cookbook a Java web app ([Spring PetClinic](https://github.com/spring-projects/spring-petclinic)) is containerized with the Aternity APM Java library, and deployed along with a [PostgreSQL](https://www.postgresql.org) database on the Linux node pool of a [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine).
 
