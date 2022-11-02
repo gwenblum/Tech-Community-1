@@ -21,6 +21,7 @@ In the Aternity APM webconsole, navigate to CONFIGURE > AGENTS > Install Agents 
 1. Find your **Customer Id**, for example *12341234-12341234-13241234*
 2. Find the **SaaS Analysis Server Host** and obtain the **SaaS Psockets Server host** replacing *agents* by *psockets*. For example if the analysis server host is *agents.apm.my_environment.aternity.com* then the SaaS Psockets Server host is *psockets.apm.my_environment.aternity.com*
 3. Download the **Aternity APM Java agent library for Linux** package or contact [Riverbed support](https://support.riverbed.com/) to obtain a copy, for example *aternity-apm-jida-linux-12.18.0_BL546.zip*
+4. *optional* If any APM extra configuration is required (in CONFIGURE > Configurations) download the configuration file (.json), for example *demo-java-eue-configuration.json*
 
 ## Step 2. Prepare Google Cloud infrastructure
 
@@ -33,9 +34,11 @@ In the [Google Cloud Console](https://console.cloud.google.com) retrieve the det
 
 ## Step 3. Store the Aternity APM package in a Bucket Storage
 
-In the [Google Cloud Console](https://console.cloud.google.com), navigate to the [Cloud Storage ](https://console.cloud.google.com/storage/browser). Select the GCP project and create a Bucket with Docker format and pick the same region as the Kubernetes cluster.
+1. In the Google Cloud Console, navigate to the [Cloud Storage ](https://console.cloud.google.com/storage/browser).
 
-There, upload the package of the Aternity APM Java agent library for Linux (.zip file) and grab the **gsutil URI** for the next steps, for example *gs://my_bucket/aternity-apm-jida-linux-12.18.0_BL546.zip*
+2. Select the GCP project and create a Bucket with Docker format and pick the same region as the Kubernetes cluster.
+
+3. Upload the package of the Aternity APM Java agent library for Linux (.zip file) and grab the **gsutil URI** for the next steps, for example *gs://my_bucket/aternity-apm-jida-linux-12.18.0_BL546.zip*
 
 ## Step 4.Containerize Aternity APM Java agent with the app
 
@@ -58,31 +61,35 @@ gcloud container clusters get-credentials autopilot-cluster-1 --region europe-we
 2. Run the command to build the image, replacing the actual values in the substitutions parameter.
 
 ```shell
-gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI={_APM_PACKAGE_GSUTIL_URI},_REGION={_REGION},_REPOSITORY={REPOSITORY}
+gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI={_APM_PACKAGE_GSUTIL_URI},_REGION={_REGION},_REPOSITORY={REPOSITORY},_APM_CONFIGURATION_GSUTIL_URI=${_APM_CONFIGURATION_GSUTIL_URI}
 ```
 Where:
 
    - **{_APM_PACKAGE_GSUTIL_URI}**: the gsutil URI of the package of the Aternity APM Java library package
    - **{_REGION}**: the region of the Artifact Registry
    - **{_REPOSITORY}**: the name of the Artifact Registry repository
-
-For example
+   
+For example,
 
 ```shell
 gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI=gs://my_bucket/aternity-apm-jida-linux-12.18.0_BL546.zip,_REGION=europe-west9,_REPOSITORY=aternity-apm
 ```
 
-Based on the [Dockerfile](Dockerfile), it is building a Docker image that will contain the Java application and the Aternity APM Java agent library for Linux. When the build is done, the image will be stored in the Artifact Registry.
+Based on the [Dockerfile](Dockerfile), it is building a Docker image that will contain the Java application, the Aternity APM Java agent library for Linux and the APM extra configuration json if provided.
+
+When the build is done, the image will be stored in the Artifact Registry.
 
 ## Step 5. Configure the Kubernetes manifest and deploy
 
-1. With the Cloud Shell Editor, edit the Kubernetes manifest [app-k8s.yaml](app-k8s.yaml) to configure the environment variables of your Aternity APM SaaS account and also the path of the image we just built:
+1. With the Cloud Shell Editor, edit the Kubernetes manifest [app-k8s.yaml](app-k8s.yaml) to configure the environment variables of your Aternity APM SaaS account, the path of the image and the APM  we just built:
 
 - **Customer Id** in the variable RVBD_CUSTOMER_ID, for example *12341234-12341234-13241234*
 - **SaaS Psockets Server host** in the variable RVBD_ANALYSIS_SERVER, for example *psockets.my_environment.aternity.com*
 - **Image Path** in the deployment section replacing the token {cookbook-233 image}, for example: *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
 
-2. In the Cloud Shell Terminal, execute the following commands to deploy the application on Kubernetes and then show the external ip address of the load-balancer of the app
+2. *Optional* Set the APM extra-configuration. In the configMap, use the .json filename for the variable name and paste the file content as its value, and in the container also use the filename.
+
+3. In the Cloud Shell Terminal, execute the following commands to deploy the application on Kubernetes and then show the external ip address of the load-balancer of the app
 
 ```shell
 kubectl apply -f app_k8s.yaml
