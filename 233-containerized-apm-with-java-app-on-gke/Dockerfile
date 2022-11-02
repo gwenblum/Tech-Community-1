@@ -1,6 +1,6 @@
 # Dockerfile
 # Coookbook 233 - Aternity Tech Community Cookbook (https://github.com/Aternity/Tech-Community)
-# v22.11.221101
+# v22.11.221102
 # 
 # Description:
 #
@@ -44,10 +44,12 @@ FROM app
 COPY --from=aternity-apm-java-agent /aternity-apm /aternity-apm/.
 
 # 3. Configure the Aternity APM Java agent for Linux
-#    with customer id, psockets host and instance name as it will appear in the Aternity APM webconsole)
-ENV RVBD_CUSTOMER_ID="my_customerid"
+#    with customer id, psockets host
+#    optionnally instance name (diplay name in the webconsole) and path to apm configuration file
+ENV RVBD_CUSTOMER_ID "my_customerid"
 ENV RVBD_ANALYSIS_SERVER "psockets.my_environment.aternity.com"
-ENV RVBD_APP_INSTANCE "" 
+ENV RVBD_APP_INSTANCE ""
+ENV RVBD_APP_CONFIG ""
 
 # 4. Keep this setting to enable Aternity APM Java agent for Linux
 ENV RVBD_AGENT_FILES=1
