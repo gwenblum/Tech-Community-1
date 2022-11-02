@@ -16,12 +16,13 @@ With this setup, the pods and nodes of the Kubernetes cluster can scaleout, the 
 
 ## Step 1. Get Aternity APM details
 
-In the Aternity APM webconsole, navigate to CONFIGURE > AGENTS > Install Agents and in the Agent Installation Steps section,
+1. In the Aternity APM webconsole, navigate to CONFIGURE > AGENTS > Install Agents and in the Agent Installation Steps section,
 
-1. Find your **Customer Id**, for example *12341234-12341234-13241234*
-2. Find the **SaaS Analysis Server Host** and obtain the **SaaS Psockets Server host** replacing *agents* by *psockets*. For example if the analysis server host is *agents.apm.my_environment.aternity.com* then the SaaS Psockets Server host is *psockets.apm.my_environment.aternity.com*
-3. Download the **Aternity APM Java agent library for Linux** package or contact [Riverbed support](https://support.riverbed.com/) to obtain a copy, for example *aternity-apm-jida-linux-12.18.0_BL546.zip*
-4. ***optional*** If any APM extra configuration is required (in CONFIGURE > Configurations) download the configuration file (.json), for example *demo-java-eue-configuration.json*
+   - Find your **Customer Id**, for example *12341234-12341234-13241234*
+   - Find the **SaaS Analysis Server Host** and obtain the **SaaS Psockets Server host** replacing *agents* by *psockets*. For example if the analysis server host is *agents.apm.my_environment.aternity.com* then the SaaS Psockets Server host is *psockets.apm.my_environment.aternity.com*
+   - Download the **Aternity APM Java agent library for Linux package** or contact [Riverbed support](https://support.riverbed.com/) to obtain a copy, for example *aternity-apm-jida-linux-12.18.0_BL546.zip*
+
+2. ***optional*** in CONFIGURE > Configurations, download the **APM configuration file (.json)** if any is required for this app, for example *demo-java-eue-configuration.json*
 
 ## Step 2. Prepare Google Cloud infrastructure
 
