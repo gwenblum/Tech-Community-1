@@ -4,6 +4,8 @@ In this cookbook a Java web app ([Spring PetClinic](https://github.com/spring-pr
 
 With this setup, the pods and nodes of the Kubernetes cluster can scaleout, the [Aternity APM](https://www.riverbed.com/products/application-performance-monitoring) will collect every transaction.
 
+Same as 233 with APM extra config
+
 ## Prerequisites
 
 1. a SaaS account for [Aternity APM](https://www.riverbed.com/products/application-performance-monitoring)
@@ -22,7 +24,7 @@ With this setup, the pods and nodes of the Kubernetes cluster can scaleout, the 
    - Find the **SaaS Analysis Server Host** and obtain the **SaaS Psockets Server host** replacing *agents* by *psockets*. For example if the analysis server host is *agents.apm.my_environment.aternity.com* then the SaaS Psockets Server host is *psockets.apm.my_environment.aternity.com*
    - Download the **Aternity APM Java agent library for Linux package** or contact [Riverbed support](https://support.riverbed.com/) to obtain a copy, for example *aternity-apm-jida-linux-12.18.0_BL546.zip*
 
-2. ***optional*** in CONFIGURE > Configurations, download the **APM configuration file (.json)** if any is required for this app, for example *demo-java-eue-configuration.json*
+2. in CONFIGURE > Configurations, download the **APM configuration file (.json)** if any is required for this app, for example *demo-java-eue-configuration.json*
 
 ## Step 2. Prepare Google Cloud infrastructure
 
@@ -88,7 +90,7 @@ When the build is done, the image will be stored in the Artifact Registry.
 - **SaaS Psockets Server host** in the variable RVBD_ANALYSIS_SERVER, for example *psockets.my_environment.aternity.com*
 - **Image Path** in the deployment section replacing the token {cookbook-233 image}, for example: *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
 
-2. *Optional* Set the APM extra-configuration. In the configMap, use the .json filename for the variable name and paste the file content as its value, and in the container also use the filename.
+2. Set the APM extra-configuration. In the ConfigMap aternity-apm-userdata-config, paste the content of the configuration file to set the value of the data configuration.json
 
 3. In the Cloud Shell Terminal, execute the following commands to deploy the application on Kubernetes and then show the external ip address of the load-balancer of the app
 
