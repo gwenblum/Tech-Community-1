@@ -1,5 +1,5 @@
 # app_k8s.yaml
-# 22.11.221101
+# 22.11.221102
 #
 # Description:
 #   
@@ -12,6 +12,7 @@
 #   1. Configure 
 #     - the environment variables RVBD_CUSTOMER_ID and RVBD_ANALYSIS_SERVER in the aternity-apm-env ConfigMap
 #     - the image path for the container in the spring-petclinic deployment
+#     - *optional* apm configuration in ConfigMap and container specs
 #   2. Deploy
 #      kubectl apply -f app_k8s.yaml
 #   3. Find external ip and browse the app http://{external ip}
@@ -26,18 +27,32 @@ kind: Namespace
 metadata:
   name: cookbook-233
 ---
+# Aternity APM, environment variables
 apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: cookbook-233
   name: aternity-apm-env
 data:
-  # Aternity APM, environment variables
   # Example:
   #   RVBD_CUSTOMER_ID: "my_customerid"
   #   RVBD_ANALYSIS_SERVER: "psockets.my_environment.aternity.com"
   RVBD_CUSTOMER_ID: "{RVBD_CUSTOMER_ID}'"
-  RVBD_ANALYSIS_SERVER: "{RVBD_ANALYSIS_SERVER}" 
+  RVBD_ANALYSIS_SERVER: "{RVBD_ANALYSIS_SERVER}"
+---
+##########################################################################################################
+# Aternity APM, *optional* apm instrumentation extra configuration
+# Uncomment and in data section paste the content of your configuration file (.json) on the second line
+#
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   namespace: cookbook-233
+#   name: aternity-apm-userdata-config
+# data:
+#   configuration.json: |
+#    "configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}
+##########################################################################################################
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -73,19 +88,22 @@ spec:
         - containerPort: 8080
         env:
         ##########################################################################################################
-        # Aternity APM, configuration
+        # Aternity APM, define app specific environment variable for APM
         #
         # Example:
         #   Name the instance
         #   - name: RVBD_APP_INSTANCE
         #     value: "cookbook-233" 
+        - name: RVBD_APP_INSTANCE
+          value: "spring-petclinic"
+        ##########################################################################################################
+        ##########################################################################################################
+        # Aternity APM, modify app environment variable
         #
         #   Add "-agentpath:/aternity-apm/agent/lib/libAwProfile64.so" to JAVA_TOOL_OPTIONS to instrument the app
         #   - name: JAVA_TOOL_OPTIONS
         #     value: "-agentpath:/aternity-apm/agent/lib/libAwProfile64.so"
         #
-        - name: RVBD_APP_INSTANCE
-          value: "spring-petclinic" 
         - name: JAVA_TOOL_OPTIONS
           value: "-agentpath:/aternity-apm/agent/lib/libAwProfile64.so -Dlogging.level.org.springframework=INFO"
         ##########################################################################################################
@@ -107,6 +125,20 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 3
+        ##########################################################################################################
+        # Aternity APM, *optional* mount the APM extra configuration file (.json)
+        # volumeMounts:
+        # - name: aternity-apm-userdata-config
+        #  mountPath: /aternity-apm/agent/userdata/config
+        #  readOnly: true
+        ##########################################################################################################
+      ##########################################################################################################
+      # Aternity APM, *optional* add a volume containing the APM extra configuration
+      # volumes:
+      # - name: aternity-apm-userdata-config
+      #   configMap:
+      #    name: aternity-apm-userdata-config
+      ###########################################################################################################
 ---
 kind: Service
 apiVersion: v1
