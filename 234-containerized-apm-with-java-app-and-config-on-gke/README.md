@@ -94,7 +94,7 @@ When the build is done, the image will be stored in the Artifact Registry.
 - **SaaS Psockets Server host** in the variable RVBD_ANALYSIS_SERVER, for example *psockets.my_environment.aternity.com*
 - **Image Path** in the deployment section replacing the token {cookbook-233 image}, for example: *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
 
-2. Find the ConfigMap *aternity-apm-userdata-config* and paste the **content of the configuration file (.json)** into data definition of configuration.json. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
+2. Find the ConfigMap *aternity-apm-userdata-config* and paste the **content of the APM configuration file (.json)** into the definition of configuration.json data. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
 
 3. In the Cloud Shell Terminal, execute the following command to deploy the application on Kubernetes. 
 

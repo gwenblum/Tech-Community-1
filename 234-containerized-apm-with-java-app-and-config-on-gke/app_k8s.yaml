@@ -50,8 +50,12 @@ metadata:
 data:
   ##########################################################################################################
   # Aternity APM, paste the content of the apm instrumentation configuration file (.json)
+  #
+  # Example:
+  #   configuration.json: |
+  #     {"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}
   configuration.json: |
-    {"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}
+    {content of the APM configuration file (.json)}
 ---
 apiVersion: apps/v1
 kind: Deployment
