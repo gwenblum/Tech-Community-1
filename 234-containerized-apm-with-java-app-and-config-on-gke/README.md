@@ -48,7 +48,7 @@ In the [Google Cloud Console](https://console.cloud.google.com) retrieve the det
 1. In the Cloud Shell terminal, run the commands to go to the cookbook folder, select the project (replacing {PROJECT_ID} with the actual value) and configure kubectl to control the cluster
 
 ```shell
-cd 233-containerized-apm-with-java-app-on-gke
+cd 234-containerized-apm-with-java-app-and-config-on-gke
 
 gcloud config set project {PROJECT_ID}
 
@@ -58,7 +58,7 @@ gcloud container clusters get-credentials {CLUSTER NAME} --region {REGION}--proj
 For example
 
 ```shell
-cd 233-containerized-apm-with-java-app-on-gke
+cd 234-containerized-apm-with-java-app-and-config-on-gke
 
 gcloud config set project aternity-cookbooks
 
@@ -106,7 +106,7 @@ edit app_k8s.yaml
 
 4. Find the spec section for the container spring-petclinic and define the image:
 
-   - **Image Path** in the image property of the container definition - replacing the token {cookbook-233 image} for example with *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
+   - **Image Path** in the image property of the container definition - replacing the token {cookbook-234 image} for example with *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-234:latest*
 
 5. In the Cloud Shell Terminal, execute the following command to deploy the application on Kubernetes. 
 
@@ -117,9 +117,9 @@ kubectl apply -f app_k8s.yaml
 6. Execute the following command to check the deployment is done and see the external ip address of the load-balancer exposing the app
 
 ```shell
-kubectl --namespace cookbook-233 get deployment
+kubectl --namespace cookbook-234 get deployment
 
-kubectl --namespace cookbook-233 get svc
+kubectl --namespace cookbook-234 get svc
 ```
 
 ## Step 6. Navigate on the app

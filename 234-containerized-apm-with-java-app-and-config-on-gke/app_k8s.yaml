@@ -18,7 +18,7 @@
 #   2. Deploy
 #      kubectl apply -f app_k8s.yaml
 #   3. Find external ip and browse the app http://{external ip}
-#      kubectl -n cookbook-233 get svc
+#      kubectl -n cookbook-234 get svc
 #   4. Cleanup
 #      kubectl delete -f app_k8s.yaml
 #
@@ -27,13 +27,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cookbook-233
+  name: cookbook-234
 ---
 # Aternity APM, environment variables
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: aternity-apm-env
 data:
   # Example:
@@ -45,7 +45,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: aternity-apm-userdata-config
 data:
   ##########################################################################################################
@@ -60,7 +60,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: spring-petclinic
   labels:
     app.kubernetes.io/name: spring-petclinic
@@ -78,8 +78,8 @@ spec:
       containers:
       - name: spring-petclinic
         # Example:
-        #   image: europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest
-        image: {cookbook-233 image}
+        #   image: europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-234:latest
+        image: {cookbook-234 image}
         resources:
           limits:
             cpu: 500m
@@ -96,7 +96,7 @@ spec:
         # Example:
         #   Name the instance
         #   - name: RVBD_APP_INSTANCE
-        #     value: cookbook-233
+        #     value: cookbook-234
         #   APM configuration
         #   - name: RVBD_APP_CONFIG
         #     value: "configuration.json"    
@@ -152,7 +152,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: spring-petclinic
 spec:
   selector:
@@ -168,7 +168,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: postgres-secrets
   labels:
     app.kubernetes.io/name: postgres
@@ -181,7 +181,7 @@ stringData:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: postgres-pv-claim
   labels:
     app.kubernetes.io/name: postgres
@@ -196,7 +196,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   name: postgres
 spec:
   replicas: 1
@@ -243,7 +243,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: cookbook-233
+  namespace: cookbook-234
   labels:
     app.kubernetes.io/name: postgres
   name: postgres

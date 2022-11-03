@@ -1,6 +1,6 @@
 # Dockerfile
-# Coookbook 233 - Aternity Tech Community Cookbook (https://github.com/Aternity/Tech-Community)
-# v22.11.221102
+# Coookbook 234 - Aternity Tech Community Cookbook (https://github.com/Aternity/Tech-Community)
+# v22.11.221103
 # 
 # Description:
 #
@@ -12,9 +12,9 @@
 #   1. Get a local copy of the Aternity APM Java agent for Linux package
 #      # aternity-apm-jida-linux.zip 
 #   2. Build
-#      docker build --tag cookbook-233 .
+#      docker build --tag cookbook-234 .
 #   3. Run
-#      docker run --rm -p 8080:8080 -e RVBD_ANALYSIS_SERVER="psockets.apm.my_environment.aternity.com" -e RVBD_CUSTOMER_ID="1234-12341243" cookbook-233
+#      docker run --rm -p 8080:8080 -e RVBD_ANALYSIS_SERVER="psockets.apm.my_environment.aternity.com" -e RVBD_CUSTOMER_ID="1234-12341243" cookbook-234
 #
 ###############################################################################
 
