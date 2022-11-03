@@ -73,7 +73,7 @@ gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTI
 
 Where:
 
-   - **{_APM_PACKAGE_GSUTIL_URI}**: the gsutil URI of the package of the Aternity APM Java library package
+   - **{_APM_PACKAGE_GSUTIL_URI}**: the gsutil URI of the Aternity APM Java library package
    - **{_REGION}**: the region of the Artifact Registry
    - **{_REPOSITORY}**: the name of the Artifact Registry repository
 
