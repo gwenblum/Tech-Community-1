@@ -97,16 +97,16 @@ edit app_k8s.yaml
 
 2. Find the ConfigMap section named *aternity-apm-env* and configure the data with your Aternity APM SaaS account details (see step 1):
 
-- **Customer Id** in the data named **RVBD_CUSTOMER_ID**, for example *12341234-12341234-13241234*
-- **SaaS Psockets Server host** in the data named **RVBD_ANALYSIS_SERVER**, for example *psockets.my_environment.aternity.com*
+   - **Customer Id** in the data named **RVBD_CUSTOMER_ID**, for example *12341234-12341234-13241234*
+   - **SaaS Psockets Server host** in the data named **RVBD_ANALYSIS_SERVER**, for example *psockets.my_environment.aternity.com*
 
 3. Find the ConfigMap section named *aternity-apm-userdata-config* and paste the APM configuration:
 
-- **content of the APM configuration file (.json)** in the data named configuration.json. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
+   - **content of the APM configuration file (.json)** in the data named configuration.json. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
 
 4. Find the spec section for the container spring-petclinic and define the image:
 
-- **Image Path** in the image property of the container definition - replacing the token {cookbook-233 image} for example with *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
+   - **Image Path** in the image property of the container definition - replacing the token {cookbook-233 image} for example with *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
 
 5. In the Cloud Shell Terminal, execute the following command to deploy the application on Kubernetes. 
 
