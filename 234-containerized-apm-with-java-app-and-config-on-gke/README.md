@@ -55,7 +55,7 @@ gcloud config set project {PROJECT_ID}
 gcloud container clusters get-credentials {CLUSTER NAME} --region {REGION}--project {PROJECT_ID}
 ```
 
-   - For example
+For example
 
 ```shell
 cd 233-containerized-apm-with-java-app-on-gke
@@ -77,7 +77,7 @@ Where:
    - **{_REGION}**: the region of the Artifact Registry
    - **{_REPOSITORY}**: the name of the Artifact Registry repository
 
-   - For example,
+For example,
 
 ```shell
 gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI=gs://my_bucket/aternity-apm-jida-linux-12.18.0_BL546.zip,_REGION=europe-west9,_REPOSITORY=aternity-apm
