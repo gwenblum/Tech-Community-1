@@ -37,8 +37,8 @@ metadata:
   name: aternity-apm-env
 data:
   # Example:
-  #   RVBD_CUSTOMER_ID: "my_customerid"
-  #   RVBD_ANALYSIS_SERVER: "psockets.my_environment.aternity.com"
+  #   RVBD_CUSTOMER_ID: my_customerid
+  #   RVBD_ANALYSIS_SERVER: psockets.my_environment.aternity.com
   RVBD_CUSTOMER_ID: {RVBD_CUSTOMER_ID}
   RVBD_ANALYSIS_SERVER: {RVBD_ANALYSIS_SERVER}
 ---

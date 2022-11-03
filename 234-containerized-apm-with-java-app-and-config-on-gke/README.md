@@ -55,7 +55,7 @@ gcloud config set project {PROJECT_ID}
 gcloud container clusters get-credentials {CLUSTER NAME} --region {REGION}--project {PROJECT_ID}
 ```
 
-For example
+   - For example
 
 ```shell
 cd 233-containerized-apm-with-java-app-on-gke
@@ -70,41 +70,55 @@ gcloud container clusters get-credentials autopilot-cluster-1 --region europe-we
 ```shell
 gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI={_APM_PACKAGE_GSUTIL_URI},_REGION={_REGION},_REPOSITORY={REPOSITORY},_APM_CONFIGURATION_GSUTIL_URI=${_APM_CONFIGURATION_GSUTIL_URI}
 ```
+
 Where:
 
    - **{_APM_PACKAGE_GSUTIL_URI}**: the gsutil URI of the package of the Aternity APM Java library package
    - **{_REGION}**: the region of the Artifact Registry
    - **{_REPOSITORY}**: the name of the Artifact Registry repository
-   
-For example,
+
+   - For example,
 
 ```shell
 gcloud builds submit --config cloudbuild.yaml --substitutions _APM_PACKAGE_GSUTIL_URI=gs://my_bucket/aternity-apm-jida-linux-12.18.0_BL546.zip,_REGION=europe-west9,_REPOSITORY=aternity-apm
 ```
 
-Based on the [Dockerfile](Dockerfile), it is building a Docker image that will contain the Java application, the Aternity APM Java agent library for Linux and the APM extra configuration json if provided.
+Based on the [Dockerfile](Dockerfile), it is building a Docker image that will contain the Java application and the Aternity APM Java agent library for Linux.
 
 When the build is done, the image will be stored in the Artifact Registry.
 
 ## Step 5. Configure the Kubernetes manifest and deploy
 
-1. With the Cloud Shell Editor, edit the manifest for Kubernetes [app-k8s.yaml](app-k8s.yaml) to configure the environment variables of your Aternity APM SaaS account, the path of the image and the APM  we just built:
+1. With the Cloud Shell Editor, edit the manifest for Kubernetes [app-k8s.yaml](app-k8s.yaml)
 
-- **Customer Id** in the variable RVBD_CUSTOMER_ID, for example *12341234-12341234-13241234*
-- **SaaS Psockets Server host** in the variable RVBD_ANALYSIS_SERVER, for example *psockets.my_environment.aternity.com*
-- **Image Path** in the deployment section replacing the token {cookbook-233 image}, for example: *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
+```shell
+edit app_k8s.yaml
+```
 
-2. Find the ConfigMap *aternity-apm-userdata-config* and paste the **content of the APM configuration file (.json)** into the definition of configuration.json data. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
+2. Find the ConfigMap section named *aternity-apm-env* and configure the data with your Aternity APM SaaS account details (see step 1):
 
-3. In the Cloud Shell Terminal, execute the following command to deploy the application on Kubernetes. 
+- **Customer Id** in the data named **RVBD_CUSTOMER_ID**, for example *12341234-12341234-13241234*
+- **SaaS Psockets Server host** in the data named **RVBD_ANALYSIS_SERVER**, for example *psockets.my_environment.aternity.com*
+
+3. Find the ConfigMap section named *aternity-apm-userdata-config* and paste the APM configuration:
+
+- **content of the APM configuration file (.json)** in the data named configuration.json. It is one (long) line, for example: *{"configuration": {"instrument.db": true, "instrument.rmi": true, "continuous.tracing.enabled": true, ... }}*
+
+4. Find the spec section for the container spring-petclinic and define the image:
+
+- **Image Path** in the image property of the container definition - replacing the token {cookbook-233 image} for example with *europe-west9-docker.pkg.dev/aternity-cookbooks/aternity-apm/cookbook-233:latest*
+
+5. In the Cloud Shell Terminal, execute the following command to deploy the application on Kubernetes. 
 
 ```shell
 kubectl apply -f app_k8s.yaml
 ```
 
-4. Execute the following command to see the external ip address of the load-balancer exposing the app
+6. Execute the following command to check the deployment is done and see the external ip address of the load-balancer exposing the app
 
 ```shell
+kubectl --namespace cookbook-233 get deployment
+
 kubectl --namespace cookbook-233 get svc
 ```
 
