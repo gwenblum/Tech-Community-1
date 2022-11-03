@@ -4,7 +4,7 @@ In this cookbook a Java web app ([Spring PetClinic](https://github.com/spring-pr
 
 With this setup, the pods and nodes of the Kubernetes cluster can scaleout, the [Aternity APM](https://www.riverbed.com/products/application-performance-monitoring) will collect every transaction.
 
-This cookbook is based on the [Cookbook 233](../233-containerized-apm-with-java-app-on-gke/) and shows how to add optional APM configuration to the Kubernetes manifest (in Step 1 and Step 5)
+This cookbook is based on the [Cookbook 233](../233-containerized-apm-with-java-app-on-gke/) and adds details on how to set APM configuration in the Kubernetes manifest (in Step 1 and Step 5)
 
 ## Prerequisites
 
