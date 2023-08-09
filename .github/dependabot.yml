@@ -5,10 +5,6 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/*/*" # Location of package manifests
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "docker" # See documentation for possible values
     directory: "/001-FlyFast-demo-app" # Location of package manifests
     schedule:
@@ -58,4 +54,13 @@ updates:
     schedule:
       interval: "weekly"
 
+  - package-ecosystem: "maven"
+    directory: "203-instrument-java-app-with-apm-agent-in-container/app"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "238-instrument-java-app-with-apm-daemonset-pod-agent-on-gke/app"
+    schedule:
+      interval: "weekly"
       
+
