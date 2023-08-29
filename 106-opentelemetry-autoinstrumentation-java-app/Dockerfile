@@ -12,7 +12,7 @@
 
 ########################################################################
 
-FROM maven:3.8.4-openjdk-17-slim as cookbook106-builder
+FROM maven:3.8-openjdk-18-slim as cookbook106-builder
 
 WORKDIR /src
 
