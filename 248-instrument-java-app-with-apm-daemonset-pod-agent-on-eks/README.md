@@ -61,7 +61,7 @@ aws ecr get-login-password --region $ecr_region | docker login --username AWS --
 
 # 2. Create a repository
 repository_name="alluvio-aternity-apm-daemonset-pod-agent"
-aws ecr create-repository --repository-name $repository_name
+aws ecr create-repository --repository-name $repository_name --region $ecr_region
 
 # 3. Build and push the container image
 tag="23.8"
@@ -120,8 +120,8 @@ Then, the SERVERS view will start to display the metrics of the different nodes 
 
 1. Prepare the image of the app
 
-In the snippet below, same as in Step 3.3, you need to replace the token {{ecr_region}} and {{aws_account_id}} with the values of your environment. 
-Exectue the snippet to build the image of app. The build is based on this [Dockerfile](app/Dockerfile).
+In the snippet below, same as in Step 3, the token {{ecr_region}} and {{aws_account_id}} must be replaced with the values of your environment. 
+Execute the snippet to build the image of app. The build is based on this [Dockerfile](app/Dockerfile).
 
 ```shell
 ecr_region = "{{ecr_region}}"  # replace {{ecr_region}}, for example: eu-west-3
@@ -132,7 +132,7 @@ aws ecr get-login-password --region $ecr_region | docker login --username AWS --
 
 # 2. Create a repository
 repository_name="cookbook-248-app"
-aws ecr create-repository --repository-name $repository_name
+aws ecr create-repository --repository-name $repository_name --region $ecr_region
 
 # 3. Build and push the container image of the app
 tag="23.8"
