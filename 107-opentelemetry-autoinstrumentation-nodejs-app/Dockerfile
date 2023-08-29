@@ -15,7 +15,7 @@
 #
 #   docker run --rm -it -p 8107:80 -e OTEL_SERVICE_NAME="service107-js" -e OTEL_EXPORTER_OTLP_ENDPOINT="http://aternity-opentelemetry-collector:4317" local/service107-js:latest
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
