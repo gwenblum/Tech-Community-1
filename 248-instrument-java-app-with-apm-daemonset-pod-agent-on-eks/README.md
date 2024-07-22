@@ -1,8 +1,11 @@
 # 248-instrument-java-app-with-apm-daemonset-pod-agent-on-eks
 
-This cookbook shows how to setup the ALLUVIO Aternity APM agent on a Kubernetes cluster in AWS, Elastic Kubernetes Serivce (EKS). 
+> [!WARNING]
+> Riverbed recently released the Riverbed Operator for Kubernetes, which is the preferred deployment method for Kubernetes.
 
-After building a container image for the APM agent, the APM Agent is deployed on the cluster as a **Daemonset POD agent**, so that there is an instance of the agent running on every node and exposing the agent services for instrumented applications (e.g. DSA on port 2111). The [yaml manifest of the Daemonset POD agent](apm-daemonset-pod-agent.yaml) needs to be configured with the information of your ALLUVIO Aternity APM SaaS.
+This cookbook shows how to manually set up the Riverbed APM agent on a Kubernetes cluster in AWS, Elastic Kubernetes Serivce (EKS). 
+
+After building a container image for the APM agent, the APM Agent is deployed on the cluster as a **Daemonset POD agent**, so that there is an instance of the agent running on every node and exposing the agent services for instrumented applications (e.g. DSA on port 2111). The [yaml manifest of the Daemonset POD agent](apm-daemonset-pod-agent.yaml) needs to be configured with the information of your Riverbed APM SaaS.
 
 Then a simple Java web-application, built from [sources](app) and containerized with this [Dockerfile](app/Dockerfile), is deployed with multiple replicas on the cluster with APM instrumentation. Both [manifest with APM](app-k8s.yaml) and [initial manifest without APM](app-k8s-without-apm.yaml) are provided for comparison. In the manifest with APM, the shared volume of the APM agent is mounted to get access to the files of the agent (e.g. the Java agent library).
 
@@ -10,11 +13,11 @@ Then a simple Java web-application, built from [sources](app) and containerized 
 
 ## Prerequisites
 
-1. a SaaS account for [ALLUVIO Aternity APM](https://www.riverbed.com/products/application-performance-monitoring)
+1. a SaaS account for [Riverbed APM](https://www.riverbed.com/products/application-performance-monitoring)
 
 2. a ready to use Kubernetes environment created in AWS: a console like Cloud9 with CLI tooling installed (git, aws-cli, docker and kubectl), EKS cluster resources with a Node group (Linux x64) and an ECR image registry
    
-## Step 1. Get the details for ALLUVIO Aternity APM
+## Step 1. Get the details for Riverbed APM
 
 In the APM webconsole, from the Home page, hit "Deploy Collectors" and "Install now" button (or else navigate via the traditional menu: CONFIGURE > AGENTS > Install Agents).
 
@@ -24,7 +27,7 @@ Then in the Linux agent panel, switch to the "Standard Agent Install" to:
 
 2. Find your **SaaS Analysis Server Host**, for example *agents.apm.my_environment.aternity.com*
 
-3. Download the latest **APM Linux Agent** package (also available on [Riverbed support](https://support.riverbed.com/content/support/software/aternity-dem/aternity-apm.html)), *appinternals_agent_latest_linux.gz*
+3. Download the latest **APM Linux Agent** package (also available on [Riverbed Support](https://support.riverbed.com/content/support/software/aternity-dem/aternity-apm.html)), *appinternals_agent_latest_linux.gz*
 
 Then in CONFIGURE > AGENTS > Configurations, 
 
@@ -48,19 +51,20 @@ cd Tech-Community/248-instrument-java-app-with-apm-daemonset-pod-agent-on-eks
 
 2. Copy the APM configuration file (prepared in Step 1.4) to the subfolder apm-customization/config/
    
-> :Warning: if the name of the configuration file is not configuration.json then edit the initial-mapping to adapt the startup auto-instrumentation mapping 
+> [!WARNING]
+> If the name of the configuration file is not configuration.json then edit the initial-mapping to adapt the startup auto-instrumentation mapping 
 
 3. In the snippet below, replace the token {{ecr_region}} and {{aws_account_id}} with your own values. Execute the snippet to build the image of the APM agent locally, and push it to the ECR container registry. The build is based on a [Dockerfile](Dockerfile). 
 
 ```shell
-ecr_region = "{{ecr_region}}"  # replace {{ecr_region}}, for example: eu-west-3
-aws_account_id = "{{aws_account_id}}"  # replace {{aws_account_id}}, for example: 1234-5678-90
+ecr_region="{{ecr_region}}"  # replace {{ecr_region}}, for example: eu-west-3
+aws_account_id="{{aws_account_id}}"  # replace {{aws_account_id}}, for example: 1234-5678-90
 
 # 1. Connect docker to the ECR repository
 aws ecr get-login-password --region $ecr_region | docker login --username AWS --password-stdin $aws_account_id.dkr.ecr.$ecr_region.amazonaws.com
 
 # 2. Create a repository
-repository_name="alluvio-aternity-apm-daemonset-pod-agent"
+repository_name="riverbed-apm-daemonset-pod-agent"
 aws ecr create-repository --repository-name $repository_name --region $ecr_region
 
 # 3. Build and push the container image
@@ -80,7 +84,7 @@ The URI should be displayed in the terminal from the previous step.
 For example:
 
 ```
-1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/alluvio-aternity-apm-daemonset-pod-agent:23.8
+1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/riverbed-apm-daemonset-pod-agent:23.8
 ```
 
 ## Step 4. Deploy the APM Daemonset POD Agent on Kubernetes
@@ -89,7 +93,7 @@ For example:
 
 Edit the Kubernetes manifest [apm-daemonset-pod-agent.yaml](apm-daemonset-pod-agent.yaml) to set the image path and the environment variables to configure the APM agent with the actual values prepared in previous steps (Step 1 and Step 3):
 
-- replace {{ALLUVIO Aternity APM Daemonset POD agent image}} with the **URI of the APM agent container image** built in the previous step (step 3.4), for example: *1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/alluvio-aternity-apm-daemonset-pod-agent:23.8*
+- replace {{Riverbed APM Daemonset POD agent image}} with the **URI of the APM agent container image** built in the previous step (step 3.4), for example: *1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/riverbed-apm-daemonset-pod-agent:23.8*
 
 - replace {{ALLUVIO_ATERNITY_APM_CUSTOMER_ID}} with the **Customer Id**, for example: *12341234-12341234-13241234*
 
@@ -107,7 +111,7 @@ kubectl apply -f apm-daemonset-pod-agent.yaml
 After few minutes, the agents will show up in the APM webconsole, in CONFIGURE > AGENTS > Agent List.
 Then, the SERVERS view will start to display the metrics of the different nodes (e.g. CPU utilization).
 
-
+> [!TIP]
 > To check the progress of the deployment on the cluster, you can run the following command in the terminal:
 >
 > ```shell
@@ -116,16 +120,19 @@ Then, the SERVERS view will start to display the metrics of the different nodes 
 > kubectl --namespace alluvio-aternity get pod
 > ```
 
-## Step 5. Deploy a web-application
+## Step 5. Deploy a web-application on Kubernetes with a manifest configured for APM instrumentation
 
 1. Prepare the image of the app
 
-In the snippet below, same as in Step 3, the token {{ecr_region}} and {{aws_account_id}} must be replaced with the values of your environment. 
-Execute the snippet to build the image of app. The build is based on this [Dockerfile](app/Dockerfile).
+In the shell script below, same as in Step 3, the token {{ecr_region}} and {{aws_account_id}} must be replaced with the values of your AWS environment. 
+Execute the script to build the image of the app. 
+
+> [!NOTE]
+> The build is based on this regular [Dockerfile](app/Dockerfile), which does not contain anything specific for the APM instrumentation.
 
 ```shell
-ecr_region = "{{ecr_region}}"  # replace {{ecr_region}}, for example: eu-west-3
-aws_account_id = "{{aws_account_id}}"  # replace {{aws_account_id}}, for example: 1234-5678-90
+ecr_region="{{ecr_region}}"  # replace {{ecr_region}}, for example: eu-west-3
+aws_account_id="{{aws_account_id}}"  # replace {{aws_account_id}}, for example: 1234-5678-90
 
 # 1. Connect docker to the ECR repository
 aws ecr get-login-password --region $ecr_region | docker login --username AWS --password-stdin $aws_account_id.dkr.ecr.$ecr_region.amazonaws.com
@@ -153,14 +160,26 @@ For example:
 1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/cookbook-248-app:23.8
 ```
 
-3. Set the image of the app in the manifest
+3. Set the image of the app in the manifest configured for APM instrumentation
 
-Edit the manifest [app/app-k8s.yaml](app/app-k8s.yaml).
-Find the container definition and there just set the image path replacing {{java-app image}} with the URI obtained in the previous step, for example: *1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/cookbook-248-app:23.8*
+Edit the manifest [app/app-k8s.yaml](app/app-k8s.yaml) and find the container definition to replace {{java-app image}} with the URI of the image obtained in the previous step.
+
+For example:
+
+```yaml
+    spec:
+      containers:
+      - name: app
+        # TODO: Replace {{java-app image}} with the actual value
+        image: 1234-5678-90.dkr.ecr.eu-west-3.amazonaws.com/cookbook-248-app:23.8
+```
+
+> [!WARNING]
+> The manifest [app/app-k8s.yaml](app/app-k8s.yaml) has been configured for the APM instrumentation, it is based on the initial manifest [app/app-k8s-without-apm.yaml](app/app-k8s-without-apm.yaml).
 
 4. Deploy the app
 
-In the terminal, execute the following command to deploy the application on Kubernetes
+In the terminal, execute the following command to deploy the application on Kubernetes using the manifest configured for the APM instrumentation.
 
 ```shell
 kubectl apply -f app/app-k8s.yaml
@@ -176,9 +195,9 @@ kubectl -n cookbook-app get svc
 
 6. Navigate on the app
 
-In your web browser, open the http url using the external IP address, for example http://external-ip-address and refresh multiple time in order to generate some traffic and application transactions.
+In your web browser, open the http url using the external IP address, for example http://external-ip-address and refresh multiple times in order to generate some traffic and application transactions.
 
-## Step 6. Monitor in ALLUVIO Aternity APM webconsole 
+## Step 6. Monitor in Riverbed APM webconsole 
 
 Go to the APM webconsole to observe the application, every instance and every transaction.
 
