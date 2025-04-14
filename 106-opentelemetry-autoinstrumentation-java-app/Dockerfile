@@ -25,7 +25,7 @@ RUN mvn package
 
 ########################################################################
 
-FROM openjdk:17
+FROM openjdk:18
 
 WORKDIR /app
 
