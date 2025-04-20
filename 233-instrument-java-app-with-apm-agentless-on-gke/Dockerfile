@@ -25,7 +25,7 @@ WORKDIR /sources
 RUN git clone https://github.com/spring-projects/spring-petclinic.git .
 RUN mvn clean package 
 
-FROM openjdk:11 as app
+FROM openjdk:18 as app
 COPY --from=build /sources/target/spring-petclinic-*.jar /spring-petclinic.jar
 EXPOSE 8080
 CMD ["java","-jar", "spring-petclinic.jar"]
