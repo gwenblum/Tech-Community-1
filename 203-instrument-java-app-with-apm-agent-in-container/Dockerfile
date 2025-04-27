@@ -21,7 +21,7 @@
 ###############################################################################
 
 # Start a build stage to copy local sources and build
-FROM maven:3-openjdk-11-slim as builder
+FROM maven:3-openjdk-18-slim as builder
 WORKDIR /app-build
 COPY ./app/. .
 RUN mvn clean package 
