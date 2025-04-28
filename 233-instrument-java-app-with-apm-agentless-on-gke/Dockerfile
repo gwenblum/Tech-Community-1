@@ -19,7 +19,7 @@
 ###############################################################################
 
 # Build the application from source
-FROM maven:3-openjdk-11-slim as build
+FROM maven:3-openjdk-18-slim as build
 RUN apt-get update && apt-get install git -y && rm -rf /var/lib/apt/lists/*
 WORKDIR /sources
 RUN git clone https://github.com/spring-projects/spring-petclinic.git .
