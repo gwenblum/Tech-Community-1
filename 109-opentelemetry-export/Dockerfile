@@ -15,7 +15,7 @@
 #   docker run -it --rm -p 8109:80 -e OTEL_EXPORTER_OTLP_ENDPOINT="otel-collector:4317" -e OTEL_SERVICE_NAME="service109-go" local/service109-go:latest
 #
 # https://hub.docker.com/_/golang
-FROM golang:1.18
+FROM golang:1.21
 
 WORKDIR /usr/src/example
 
